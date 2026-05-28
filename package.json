@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "type": "commonjs",
   "scripts": {
+    "start": "node .",
+    "dev": "node --watch .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -13,9 +16,12 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/Inaki-F/TP2_TPFinal/issues"
   },
-  "homepage": "https://github.com/Inaki-F/TP2_TPFinal#readme"
+  "homepage": "https://github.com/Inaki-F/TP2_TPFinal#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "sequelize": "^6.37.8"
+  }
 }
