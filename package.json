@@ -5,8 +5,8 @@
   "main": "index.js",
   "type": "commonjs",
   "scripts": {
-    "start": "node .",
-    "dev": "node --watch .",
+    "start": "node --env-file .env .",
+    "dev": "node --env-file .env --watch.",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,7 +21,9 @@
   },
   "homepage": "https://github.com/Inaki-F/TP2_TPFinal#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "express": "^5.2.1",
+    "mysql2": "^3.22.4",
     "sequelize": "^6.37.8"
   }
 }
