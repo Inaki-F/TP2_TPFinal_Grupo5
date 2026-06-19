@@ -43,4 +43,10 @@ class UsuarioService {
   };
 }
 
+obtenerSoloClientes = async () => {
+    const todosLosUsuarios = await this.obtenerTodosUsuarios();
+    const clientes = todosLosUsuarios.filter(usuario => usuario.roleId === 2);
+    return clientes;
+  };
+
 module.exports = UsuarioService;

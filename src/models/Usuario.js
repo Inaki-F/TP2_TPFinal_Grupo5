@@ -25,7 +25,7 @@ Usuario.init(
     },
     roleId: {
       type: DataTypes.INTEGER,
-      defaultValue: 2,
+      defaultValue: 2, // 1: Admin, 2: Cliente, 3: Empleado
     },
   },
   {

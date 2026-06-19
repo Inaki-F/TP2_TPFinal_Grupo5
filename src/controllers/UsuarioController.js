@@ -66,4 +66,13 @@ class UsuarioController {
   };
 }
 
+obtenerSoloClientes = async (req, res) => {
+    try {
+      const clientes = await this.usuarioServicio.obtenerSoloClientes();
+      res.status(200).send({ success: true, message: clientes });
+    } catch (error) {
+      res.status(400).send({ success: false, message: error.message });
+    }
+  };
+
 module.exports = UsuarioController;

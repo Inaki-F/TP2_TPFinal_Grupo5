@@ -10,7 +10,7 @@ Rol.init(
       allowNull: false,
       unique: true,
       validate: {
-        is: /^[a-z]+$/i, // Solo letras
+        is: /^[a-z]+$/i,
       },
     },
   },
