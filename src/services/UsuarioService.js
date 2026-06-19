@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 class UsuarioService {
   constructor(usuario, rol) {
     this.usuario = usuario;
@@ -24,29 +26,23 @@ class UsuarioService {
     return usuario;
   };
 
-  login = async ({ email, password }) => {
-    const usuario = await this.usuario.findOne({
-      where: { email },
-      attributes: ["id", "nombre", "email", "password", "roleId"],
-    });
-    
-    if (!usuario) throw new Error("usuario not found");
-
-    if (usuario.password !== password) throw new Error("invalid password");
-    
-    return {
-      id: usuario.id,
-      nombre: usuario.nombre,
-      email: usuario.email,
-      roleId: usuario.roleId,
-    };
+login = async (email, password) => {
+    const usuarioEncontrado = await this.usuario.findOne({ where: { email } });
+    if (!usuarioEncontrado) {
+      throw new Error("Credenciales inválidas (Email no encontrado)");
+    }
+    const esValida = await bcrypt.compare(password, usuarioEncontrado.password);
+    if (!esValida) {
+      throw new Error("Credenciales inválidas (Contraseña incorrecta)");
+    }
+    return usuarioEncontrado;
   };
-}
 
 obtenerSoloClientes = async () => {
     const todosLosUsuarios = await this.obtenerTodosUsuarios();
     const clientes = todosLosUsuarios.filter(usuario => usuario.roleId === 2);
     return clientes;
   };
+}
 
 module.exports = UsuarioService;

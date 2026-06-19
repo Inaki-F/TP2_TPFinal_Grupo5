@@ -1,26 +1,22 @@
-const {DataTypes} = require('sequelize');
-const sequelize = require('../../connection/sequelize.js');
+const { DataTypes, Model } = require("sequelize");
+const bcrypt = require("bcrypt");
+const sequelize = require("../../connection/connection");
+
+class Usuario extends Model {}
 
 Usuario.init(
   {
     nombre: {
       type: DataTypes.STRING(50),
       allowNull: false,
-      validate: {
-        len: [3, 50],
-        is: /^[a-z\s]+$/i,
-      },
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true,
-      },
     },
     password: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(255),
       allowNull: false,
     },
     roleId: {
@@ -33,6 +29,20 @@ Usuario.init(
     modelName: "Usuario",
     tableName: "usuarios",
     timestamps: false,
+    hooks: {
+      beforeCreate: async (usuario) => {
+        if (usuario.password) {
+          const salt = await bcrypt.genSalt(10);
+          usuario.password = await bcrypt.hash(usuario.password, salt);
+        }
+      },
+      beforeUpdate: async (usuario) => {
+        if (usuario.changed("password")) {
+          const salt = await bcrypt.genSalt(10);
+          usuario.password = await bcrypt.hash(usuario.password, salt);
+        }
+      }
+    }
   }
 );
 
