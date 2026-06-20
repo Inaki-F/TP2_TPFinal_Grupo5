@@ -67,7 +67,7 @@ Promocion.init(
         timestamps: false,
         hooks: {
             beforeSave: (promocion) => {
-                promocion.habilitado = new Date() >= promocion.fechaInicio && new Date() <= promocion.fechaFin;
+                promocion.habilitado = new Date() >= promocion.fechaSalida && new Date() <= promocion.fechaFin;
             }
         }
     }

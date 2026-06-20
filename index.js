@@ -1,6 +1,6 @@
 import express from "express";
 import router from "./routes/router.js";
-import { notFound } from "./midlewares/notFound.js";
+import { notFound } from "./middlewares/notFound.js";
 import {SERVER_PORT} from "./config/config.js";
 
 const app = express();

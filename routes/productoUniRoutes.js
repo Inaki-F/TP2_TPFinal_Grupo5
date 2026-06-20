@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { productoUnificadoController } from "../containers/productoUniContainer.js";
+import { productoUniController } from "../containers/productoUniContainer.js";
 
 const router = Router();
 
-router.get("/", productoUnificadoController.getAll);
+router.get("/", productoUniController.getAll);
 
 export default router

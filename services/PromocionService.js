@@ -1,4 +1,4 @@
-import { where, Op } from "sequelize";
+import { Op } from "sequelize";
 
 class PromocionService {
   constructor(promocionModel, productoModel, promocionCategoriaModel, promoProductoModel) {
@@ -51,14 +51,14 @@ _agruparProductosRepetidos = (productos) => {
       if (agrupados[producto.id]) {
         agrupados[producto.id].cantidad += producto.cantidad || 1;
       } else {
-        agrupados[producto.id] = { ...producto, cantidad: 1 };
+        agrupados[producto.id] = { id: producto.id, cantidad: producto.cantidad || 1  };
       }
     });
     return Object.values(agrupados);
   };
 
   getAllPromociones = async () => {
-    const promos = await this.promocion.findAll({ include: [{
+    return await this.promocion.findAll({ include: [{
       association: 'productosIncluidos',
       attributes: ['id', 'nombre', 'stock'],
       through: { attributes: ['cantidad'] }
@@ -106,6 +106,7 @@ _agruparProductosRepetidos = (productos) => {
       }]
     })
     const promosActivas = promociones.filter(promo => this._revisarStockPromocion(promo))
+    return promosActivas;
    }
 
   _revisarStockPromocion = (promocion) => {
@@ -116,7 +117,7 @@ _agruparProductosRepetidos = (productos) => {
       const cantidadRequerida = producto.PromoProducto?.cantidad || 1;
         return (producto.stock >= cantidadRequerida) && producto.habilitado;
   })
-}
+  }
 
 actualizarPromocion = async (id, data, productosIncluidos = null) => {
   try {
@@ -144,7 +145,7 @@ actualizarPromocion = async (id, data, productosIncluidos = null) => {
     await promocion.reload();
     return promocion;
 
-  } catch {
+  } catch (error) {
     throw new Error(`Error al actualizar promoción: ${error.message}`);
   }
 }
@@ -172,3 +173,4 @@ reactivarPromocion = async (id) => {
 };
 
 }
+export default PromocionService;

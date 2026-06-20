@@ -1,4 +1,4 @@
-class ProductoUnificadoController {
+class ProductoUniController {
   constructor(productoUnificadoService) {
     this.service = productoUnificadoService;
   }
@@ -21,4 +21,4 @@ class ProductoUnificadoController {
   };
 }
 
-export default ProductoUnificadoController;
+export default ProductoUniController;

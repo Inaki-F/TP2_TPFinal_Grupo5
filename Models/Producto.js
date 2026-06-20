@@ -1,6 +1,5 @@
 import { DataTypes, Model} from "sequelize";
 import sequelize from "../connection/sequelize.js";
-import ProductoBase from "./ProductoBase.js";
 
 class Producto extends Model {
     async getPrecioFinal() {

@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { productoController } from "../../containers/productoContainer.js";
-import { validateIdParam } from "../../middlewares/validateId.js";
+import { productoController } from "../containers/productoContainer.js";
+import { validateIdParam } from "../middlewares/validateId.js";
 
 const router = Router();
 

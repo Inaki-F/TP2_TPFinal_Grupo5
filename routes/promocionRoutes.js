@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { promocionController } from "../containers/promocionContainer.js";
-import { validateIdParam } from "../midlewares/validateId.js";
+import { validateIdParam } from "../middlewares/validateId.js";
 
 const router = Router();
 
