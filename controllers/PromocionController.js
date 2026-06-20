@@ -14,7 +14,7 @@ class PromocionController {
 
     getActivas = async (req, res) => {
     try {
-      const promociones = await this.promocionService.obtenerPromocionesActivas();
+      const promociones = await this.promocionService.getPromocionesActivas();
       res.status(200).json({success: true, data: promociones, message: 'Promociones obtenidas correctamente'});
     } catch (error) {
       res.status(500).json({ error: error.message });

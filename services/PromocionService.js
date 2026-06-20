@@ -1,10 +1,11 @@
 import { Op } from "sequelize";
 
 class PromocionService {
-  constructor(promocionModel, productoModel, promocionCategoriaModel, promoProductoModel) {
+  constructor(promocionModel, productoModel, categoriaModel, promocionCategoriaModel, promoProductoModel) {
     this.promocion = promocionModel;
     this.producto = productoModel;
-    this.PromocionCategoria = promocionCategoriaModel;
+    this.categoria = categoriaModel;
+    this.promocionCategoria = promocionCategoriaModel;
     this.promoProducto = promoProductoModel;
   }
 
@@ -23,7 +24,27 @@ class PromocionService {
           cantidad:  p.cantidad
         }));
         await this.promoProducto.bulkCreate(asociaciones);
+
       }
+
+      const idsProductos = productosAgrupados.map(p => p.id);
+
+        const productosConCategoria = await this.producto.findAll({
+          where: { id: idsProductos },
+          include: [{ model: this.categoria, attributes: ['id'] }] 
+        });
+
+        const categoriasIds = productosConCategoria
+          .map(p => p.categoria?.id)
+          .filter(id => id !== undefined && id !== null);
+
+        const categoriasUnicas = [...new Set(categoriasIds)];
+        
+        const promoCategorias = categoriasUnicas.map(categoriaId  => ({
+          promocionId: promocion.id,
+          categoriaId: categoriaId,
+        }));
+        await this.promocionCategoria.bulkCreate(promoCategorias);
 
       return promocion;
     } catch (error) {
@@ -139,7 +160,30 @@ actualizarPromocion = async (id, data, productosIncluidos = null) => {
           cantidad: p.cantidad
         }));
         await this.promoProducto.bulkCreate(asociaciones);
-      
+
+        const idsProductos = productosAgrupados.map(p => p.id);
+        
+          const productosConCategoria = await this.producto.findAll({
+          where: { id: idsProductos },
+          include: [{ model: this.categoria, attributes: ['id'] }] 
+        });
+
+        const categoriasIds = productosConCategoria
+          .map(p => p.categoria?.id)
+          .filter(id => id !== undefined && id !== null);
+
+        const categoriasUnicas = [...new Set(categoriasIds)];
+
+              await this.promocionCategoria.destroy({
+        where: { promocionId: id }
+      });
+        
+        const promoCategorias = categoriasUnicas.map(categoriaId  => ({
+          promocionId: promocion.id,
+          categoriaId: categoriaId,
+        }));
+        await this.promocionCategoria.bulkCreate(promoCategorias);
+
         
     }
     await promocion.reload();

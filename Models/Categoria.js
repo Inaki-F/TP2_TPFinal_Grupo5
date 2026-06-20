@@ -13,7 +13,12 @@ Categoria.init({
     type: DataTypes.STRING(50), 
     allowNull: false, 
     unique: true 
-}
+},
+        descripcion: {
+            type: DataTypes.STRING(255),
+            allowNull: true,
+            validate: { len: [10, 255] }
+        }
 }, { 
     sequelize, 
     modelName: "Categoria", 
