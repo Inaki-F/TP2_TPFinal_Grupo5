@@ -5,7 +5,7 @@ import PromocionCategoria from "./PromocionCategoria.js";
 import PromoProducto from "./PromoProducto.js"
 
 Categoria.hasMany(Producto, { foreignKey: "categoriaId" });
-Producto.belongsTo(Categoria, { foreignKey: "categoriaId" });
+Producto.belongsTo(Categoria, {  as: 'categoria', foreignKey: "categoriaId" });
 
 Promocion.belongsToMany(Categoria, {
   through: PromocionCategoria,

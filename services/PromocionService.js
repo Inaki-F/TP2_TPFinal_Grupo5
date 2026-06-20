@@ -9,48 +9,61 @@ class PromocionService {
     this.promoProducto = promoProductoModel;
   }
 
-    crearPromocion = async (data, productosIncluidos = []) => {
-    try {
-      await this._validarProductosExistentes(productosIncluidos);
+  crearPromocion = async (data, productosIncluidos = []) => {
+  try {
+    console.log('➡️ 1. Productos recibidos:', productosIncluidos);
+    await this._validarProductosExistentes(productosIncluidos);
 
-      const promocion = await this.promocion.create(data);
+    const promocion = await this.promocion.create(data);
+    console.log('➡️ 2. Promoción creada ID:', promocion.id);
 
-      const productosAgrupados = this._agruparProductosRepetidos(productosIncluidos);
+    const productosAgrupados = this._agruparProductosRepetidos(productosIncluidos);
+    console.log('➡️ 3. Productos agrupados:', productosAgrupados);
 
-      if (productosAgrupados.length) {
-        const asociaciones = productosAgrupados.map(p => ({
-          promocionId: promocion.id,
-          productoId: p.id,
-          cantidad:  p.cantidad
-        }));
-        await this.promoProducto.bulkCreate(asociaciones);
-
-      }
-
-      const idsProductos = productosAgrupados.map(p => p.id);
-
-        const productosConCategoria = await this.producto.findAll({
-          where: { id: idsProductos },
-          include: [{ model: this.categoria, attributes: ['id'] }] 
-        });
-
-        const categoriasIds = productosConCategoria
-          .map(p => p.categoria?.id)
-          .filter(id => id !== undefined && id !== null);
-
-        const categoriasUnicas = [...new Set(categoriasIds)];
-        
-        const promoCategorias = categoriasUnicas.map(categoriaId  => ({
-          promocionId: promocion.id,
-          categoriaId: categoriaId,
-        }));
-        await this.promocionCategoria.bulkCreate(promoCategorias);
-
-      return promocion;
-    } catch (error) {
-      throw new Error(`Error al crear promoción: ${error.message}`);
+    if (productosAgrupados.length) {
+      const asociaciones = productosAgrupados.map(p => ({
+        promocionId: promocion.id,
+        productoId: p.id,
+        cantidad: p.cantidad
+      }));
+      await this.promoProducto.bulkCreate(asociaciones);
+      console.log('➡️ 4. Productos asociados a la promoción');
     }
+
+    const idsProductos = productosAgrupados.map(p => p.id);
+    console.log('➡️ 5. IDs de productos:', idsProductos);
+
+    const productosConCategoria = await this.producto.findAll({
+      where: { id: idsProductos },
+      include: [{ model: this.categoria, as: 'categoria', attributes: ['id'] }]
+    });
+    console.log('➡️ 6. Productos con categoría encontrados:', productosConCategoria.length);
+
+    const categoriasIds = productosConCategoria
+      .map(p => p.categoria?.id)
+      .filter(id => id !== undefined && id !== null);
+    console.log('➡️ 7. IDs de categoría extraídos:', categoriasIds);
+
+    const categoriasUnicas = [...new Set(categoriasIds)];
+    console.log('➡️ 8. IDs únicos de categoría:', categoriasUnicas);
+
+    if (categoriasUnicas.length) {
+      const promoCategorias = categoriasUnicas.map(categoriaId => ({
+        promocionId: promocion.id,
+        categoriaId: categoriaId,
+      }));
+      await this.promocionCategoria.bulkCreate(promoCategorias);
+      console.log('➡️ 9. Categorías asociadas a la promoción');
+    } else {
+      console.warn('⚠️ No se encontraron categorías para los productos');
+    }
+
+    return promocion;
+  } catch (error) {
+    console.error('❌ Error en crearPromocion:', error);
+    throw new Error(`Error al crear promoción: ${error.message}`);
   }
+}
 
 _validarProductosExistentes = async (productosIncluidos) => {
     if (!productosIncluidos?.length) return;
@@ -78,17 +91,21 @@ _agruparProductosRepetidos = (productos) => {
     return Object.values(agrupados);
   };
 
+
   getAllPromociones = async () => {
     return await this.promocion.findAll({ include: [{
       association: 'productosIncluidos',
       attributes: ['id', 'nombre', 'stock'],
-      through: { attributes: ['cantidad'] }
+      through: { attributes: ['cantidad'] },
+      required: false
     },
-  {
+   {
         association: 'categorias',
-        attributes: ['id', 'nombre']
-      }]
-  })
+        attributes: ['id', 'nombre'],
+        required: false
+      } ]
+  }
+)
   }
 
   getPromocionById = async (id) => {
@@ -107,6 +124,7 @@ _agruparProductosRepetidos = (productos) => {
   return promocion;
 };
 
+
    getPromocionesActivas = async() => {
       const ahora = new Date();
     const promociones = await this.promocion.findAll({
@@ -118,7 +136,7 @@ _agruparProductosRepetidos = (productos) => {
       },
       include: [{
       association: 'productosIncluidos',
-      attributes: ["id", "nombre", "stock"],
+      attributes: ["id", "nombre", "stock", "habilitado"],
       through: { attributes: ['cantidad'] }
     },
   {
@@ -126,9 +144,11 @@ _agruparProductosRepetidos = (productos) => {
         attributes: ['id', 'nombre']
       }]
     })
-    const promosActivas = promociones.filter(promo => this._revisarStockPromocion(promo))
+  const promosActivas = promociones.filter(promo => this._revisarStockPromocion(promo));
+  console.log('Promociones activas con stock:', promosActivas.length);
     return promosActivas;
    }
+
 
   _revisarStockPromocion = (promocion) => {
     if (!promocion.productosIncluidos || promocion.productosIncluidos.length === 0) {
@@ -162,7 +182,7 @@ actualizarPromocion = async (id, data, productosIncluidos = null) => {
         await this.promoProducto.bulkCreate(asociaciones);
 
         const idsProductos = productosAgrupados.map(p => p.id);
-        
+
           const productosConCategoria = await this.producto.findAll({
           where: { id: idsProductos },
           include: [{ model: this.categoria, attributes: ['id'] }] 
