@@ -12,12 +12,19 @@ Categoria.init({
   nombre: { 
     type: DataTypes.STRING(50), 
     allowNull: false, 
-    unique: true 
+    unique: {
+      msg: "El nombre de la categoría ya existe"
+    }
 },
         descripcion: {
             type: DataTypes.STRING(255),
             allowNull: true,
-            validate: { len: [10, 255] }
+            validate: {
+              len: {
+                args: [10, 255],
+                msg: "La descripción debe tener entre 10 y 255 caracteres"
+              }
+            }
         }
 }, { 
     sequelize, 
