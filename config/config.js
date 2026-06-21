@@ -1,12 +1,12 @@
 import{env} from "node:process";
 
-const SERVER_PORT = env.SERVER_PORT;
-const DB_HOST = env.DB_HOST;
-const DB_USER = env.DB_USER;
-const DB_PASSWORD = env.DB_PASSWORD;
-const DB_NAME = env.DB_NAME;
-const DB_PORT = env.DB_PORT;
-const DB_DIALECT = env.DB_DIALECT;
+const SERVER_PORT = env.SERVER_PORT || "8080";
+const DB_HOST = env.DB_HOST || "localhost";
+const DB_USER = env.DB_USER || "root";
+const DB_PASSWORD = env.DB_PASSWORD || "";
+const DB_NAME = env.DB_NAME || "tp2_tpfinal";
+const DB_PORT = env.DB_PORT || "3306";
+const DB_DIALECT = env.DB_DIALECT || "mysql";
 
 export {
     SERVER_PORT,
