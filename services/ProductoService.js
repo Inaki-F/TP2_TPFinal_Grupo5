@@ -8,7 +8,7 @@ class ProductoSimpleService {
 
   getAll = async () => {
     const productos = await this.producto.findAll({
-      include: [{ model: this.categoria, attributes: ['id', 'nombre'] }]
+      include: [{  model: this.categoria, as: 'categoria', attributes: ['id', 'nombre'] }]
   });
     return productos;
   };
@@ -16,14 +16,14 @@ class ProductoSimpleService {
   getProductosActivos  = async () => {
     const productos = await this.producto.findAll({
       where : { habilitado: true, stock: { [Op.gt]: 0 } },
-      include: [{ model: this.categoria, attributes: ['id', 'nombre'] }]
+      include: [{  model: this.categoria, as: 'categoria', attributes: ['id', 'nombre'] }]
   });
     return productos;
   };
 
   getById = async (id) => {
     const producto = await this.producto.findByPk(id, {
-      include: [{ model: this.categoria, attributes: ['id', 'nombre', 'descripcion'] }]
+      include: [{  model: this.categoria, as: 'categoria', attributes: ['id', 'nombre', 'descripcion'] }]
     });
     if (!producto) throw new Error('Producto no encontrado');
     return producto;

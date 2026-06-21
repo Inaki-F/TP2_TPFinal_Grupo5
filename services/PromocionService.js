@@ -35,7 +35,7 @@ class PromocionService {
 
     const productosConCategoria = await this.producto.findAll({
       where: { id: idsProductos },
-      include: [{ model: this.categoria, as: 'categoria', attributes: ['id'] }]
+      include: [{  model: this.categoria, as: 'categoria', attributes: ['id'] }]
     });
     console.log('➡️ 6. Productos con categoría encontrados:', productosConCategoria.length);
 
@@ -185,7 +185,7 @@ actualizarPromocion = async (id, data, productosIncluidos = null) => {
 
           const productosConCategoria = await this.producto.findAll({
           where: { id: idsProductos },
-          include: [{ model: this.categoria, attributes: ['id'] }] 
+          include: [{  model: this.categoria, as: 'categoria', attributes: ['id'] }] 
         });
 
         const categoriasIds = productosConCategoria
