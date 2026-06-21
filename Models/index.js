@@ -8,7 +8,7 @@ import Carrito from "./Carrito.js";
 import Rol from "./Rol.js";
 
 Categoria.hasMany(Producto, { foreignKey: "categoriaId" });
-Producto.belongsTo(Categoria, {  as: 'categoria', foreignKey: "categoriaId" });
+Producto.belongsTo(Categoria, {  foreignKey: "categoriaId",  as: 'categoria' });
 
 Promocion.belongsToMany(Categoria, {
   through: PromocionCategoria,
