@@ -1,8 +1,8 @@
-const { Router } = require("express");
-const usuarioController = require("../containers/usuarioContainer.js");
-// const autenticar = require("../middlewares/autenticar.js");
+import { Router } from "express";
+import usuarioController from "../containers/usuarioContainer.js"; 
 
 const usuarioRoutes = Router();
+
 
 usuarioRoutes.get("/", usuarioController.obtenerTodosUsuarios);
 usuarioRoutes.get("/:id", usuarioController.obtenerUsuarioPorId);
@@ -12,4 +12,4 @@ usuarioRoutes.post("/", usuarioController.crearUsuario);
 usuarioRoutes.put("/:id", usuarioController.actualizarUsuario);
 usuarioRoutes.delete("/:id", usuarioController.eliminarUsuario);
 
-module.exports = usuarioRoutes;
+export default usuarioRoutes;

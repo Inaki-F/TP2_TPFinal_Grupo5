@@ -1,5 +1,5 @@
-const { DataTypes, Model } = require("sequelize");const 
-sequelize = require("../../connection/sequelize.js");
+import { DataTypes, Model } from "sequelize";
+import sequelize from "../connection/sequelize.js";
 
 class Rol extends Model {}
 
@@ -17,9 +17,8 @@ Rol.init(
   {
     sequelize: sequelize,
     modelName: "Rol",
-    tableName: "roles",
     timestamps: false,
   }
 );
 
-module.exports = Rol;
+export default Rol;

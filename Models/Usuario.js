@@ -1,6 +1,6 @@
-const { DataTypes, Model } = require("sequelize");
-const bcrypt = require("bcrypt");
-const sequelize = require("../../connection/connection");
+import { DataTypes, Model } from "sequelize";
+import bcrypt from "bcrypt";
+import sequelize from "../connection/sequelize.js";
 
 class Usuario extends Model {}
 
@@ -27,7 +27,6 @@ Usuario.init(
   {
     sequelize: sequelize,
     modelName: "Usuario",
-    tableName: "usuarios",
     timestamps: false,
     hooks: {
       beforeCreate: async (usuario) => {
@@ -46,4 +45,4 @@ Usuario.init(
   }
 );
 
-module.exports = Usuario;
+export default Usuario;

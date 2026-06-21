@@ -1,5 +1,5 @@
 class UsuarioController {
-    constructor(servicio) {
+  constructor(servicio) {
     this.usuarioServicio = servicio;
   }
 
@@ -64,9 +64,8 @@ class UsuarioController {
       res.status(400).send({ success: false, message: error.message });
     }
   };
-}
-
-obtenerSoloClientes = async (req, res) => {
+  
+  obtenerSoloClientes = async (req, res) => {
     try {
       const clientes = await this.usuarioServicio.obtenerSoloClientes();
       res.status(200).send({ success: true, message: clientes });
@@ -74,5 +73,6 @@ obtenerSoloClientes = async (req, res) => {
       res.status(400).send({ success: false, message: error.message });
     }
   };
+}
 
-module.exports = UsuarioController;
+export default UsuarioController;

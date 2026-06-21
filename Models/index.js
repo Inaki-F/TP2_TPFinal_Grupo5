@@ -3,6 +3,9 @@ import Producto from "./Producto.js";
 import Promocion from "./Promocion.js";
 import PromocionCategoria from "./PromocionCategoria.js";
 import PromoProducto from "./PromoProducto.js"
+import Usuario from "./Usuario.js";
+import Carrito from "./Carrito.js";
+import Rol from "./Rol.js";
 
 Categoria.hasMany(Producto, { foreignKey: "categoriaId" });
 Producto.belongsTo(Categoria, {  as: 'categoria', foreignKey: "categoriaId" });
@@ -33,4 +36,15 @@ Producto.belongsToMany(Promocion, {
   as: "promocionesDondeAparece"
 });
 
-export { Producto, Categoria, Promocion, PromocionCategoria, PromoProducto };
+Usuario.hasOne(Carrito, {
+  foreignKey: "usuarioId" 
+});
+
+Carrito.belongsTo(Usuario, {
+  foreignKey: "usuarioId" 
+});
+
+Rol.hasMany(Usuario, { foreignKey: "roleId" });
+Usuario.belongsTo(Rol, { foreignKey: "roleId" });
+  
+export { Producto, Categoria, Promocion, PromocionCategoria, PromoProducto, Usuario, Carrito, Rol };

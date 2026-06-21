@@ -1,4 +1,6 @@
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
+import Usuario from "../Models/Usuario.js";
+
 
 class UsuarioService {
   constructor(usuario, rol) {
@@ -45,4 +47,4 @@ obtenerSoloClientes = async () => {
   };
 }
 
-module.exports = UsuarioService;
+export default UsuarioService;
