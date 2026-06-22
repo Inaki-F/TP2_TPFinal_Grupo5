@@ -1,5 +1,6 @@
 import bcrypt from "bcrypt";
 import Usuario from "../Models/Usuario.js";
+import {generateToken} from "../utils/jwt.js";
 
 
 class UsuarioService {
@@ -28,17 +29,25 @@ class UsuarioService {
     return usuario;
   };
 
-login = async (email, password) => {
-    const usuarioEncontrado = await this.usuario.findOne({ where: { email } });
-    if (!usuarioEncontrado) {
-      throw new Error("Credenciales inválidas (Email no encontrado)");
-    }
-    const esValida = await bcrypt.compare(password, usuarioEncontrado.password);
-    if (!esValida) {
-      throw new Error("Credenciales inválidas (Contraseña incorrecta)");
-    }
-    return usuarioEncontrado;
+login = async ({ email, password }) => {
+  let resultadoLogin = null;
+  const usuarioEncontrado = await this.usuario.findOne({ where: { email } });
+  if (!usuarioEncontrado) {
+    throw new Error("Usuario no encontrado");
+  }
+  const esValida = await bcrypt.compare(password, usuarioEncontrado.password);
+  if (!esValida) {
+    throw new Error("Contraseña incorrecta");
+  }
+  const payload = {
+    id: usuarioEncontrado.id,
+    nombre: usuarioEncontrado.nombre,
+    roleId: usuarioEncontrado.roleId,
   };
+  const token = generateToken(payload);
+  resultadoLogin = { token, id: usuarioEncontrado.id};
+  return resultadoLogin;
+};
 
 obtenerSoloClientes = async () => {
     const todosLosUsuarios = await this.obtenerTodosUsuarios();

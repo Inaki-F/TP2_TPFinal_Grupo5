@@ -7,6 +7,7 @@ const DB_PASSWORD = env.DB_PASSWORD || "";
 const DB_NAME = env.DB_NAME || "tp2_tpfinal";
 const DB_PORT = env.DB_PORT || "3306";
 const DB_DIALECT = env.DB_DIALECT || "mysql";
+const SECRET = env.SECRET
 
 export {
     SERVER_PORT,
@@ -15,5 +16,6 @@ export {
     DB_PASSWORD,
     DB_NAME,
     DB_PORT,
-    DB_DIALECT
+    DB_DIALECT,
+    SECRET
 }
