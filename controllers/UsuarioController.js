@@ -58,7 +58,7 @@ class UsuarioController {
   login = async (req, res) => {
     try {
       const { email, password } = req.body;
-      const dataUsuario = await this.usuarioServicio.login(email, password);
+      const dataUsuario = await this.usuarioServicio.login({email, password});
       res.cookie("payload", dataUsuario.token);
       res.status(200).send({ success: true, message: dataUsuario.id });
     } catch (error) {
@@ -68,7 +68,7 @@ class UsuarioController {
 
   me = async (req, res) => {
     try {
-      const usuarioLogueado = req.user;
+      const usuarioLogueado = req.autenticar;
       res.status(200).send({ success: true, message: usuarioLogueado });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message });

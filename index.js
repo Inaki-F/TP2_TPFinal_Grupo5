@@ -9,17 +9,18 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(morgan("dev"));
-app.use(cookieParser());
-app.use(router);
-
 app.use(cors({
    origin: 'http://localhost:5173',
    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
    allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
+app.use(cookieParser());
+
+app.use(router);
 
 await sequelize.sync({ alter: false });
 
