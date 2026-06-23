@@ -11,14 +11,11 @@ class PromocionService {
 
   crearPromocion = async (data, productosIncluidos = []) => {
   try {
-    console.log('➡️ 1. Productos recibidos:', productosIncluidos);
     await this._validarProductosExistentes(productosIncluidos);
 
     const promocion = await this.promocion.create(data);
-    console.log('➡️ 2. Promoción creada ID:', promocion.id);
 
     const productosAgrupados = this._agruparProductosRepetidos(productosIncluidos);
-    console.log('➡️ 3. Productos agrupados:', productosAgrupados);
 
     if (productosAgrupados.length) {
       const asociaciones = productosAgrupados.map(p => ({
@@ -27,25 +24,20 @@ class PromocionService {
         cantidad: p.cantidad
       }));
       await this.promoProducto.bulkCreate(asociaciones);
-      console.log('➡️ 4. Productos asociados a la promoción');
     }
 
     const idsProductos = productosAgrupados.map(p => p.id);
-    console.log('➡️ 5. IDs de productos:', idsProductos);
 
     const productosConCategoria = await this.producto.findAll({
       where: { id: idsProductos },
       include: [{  model: this.categoria, as: 'categoria', attributes: ['id'] }]
     });
-    console.log('➡️ 6. Productos con categoría encontrados:', productosConCategoria.length);
 
     const categoriasIds = productosConCategoria
       .map(p => p.categoria?.id)
       .filter(id => id !== undefined && id !== null);
-    console.log('➡️ 7. IDs de categoría extraídos:', categoriasIds);
 
     const categoriasUnicas = [...new Set(categoriasIds)];
-    console.log('➡️ 8. IDs únicos de categoría:', categoriasUnicas);
 
     if (categoriasUnicas.length) {
       const promoCategorias = categoriasUnicas.map(categoriaId => ({
@@ -53,7 +45,6 @@ class PromocionService {
         categoriaId: categoriaId,
       }));
       await this.promocionCategoria.bulkCreate(promoCategorias);
-      console.log('➡️ 9. Categorías asociadas a la promoción');
     } else {
       console.warn('⚠️ No se encontraron categorías para los productos');
     }
