@@ -1,15 +1,11 @@
-function esAdmin(req, res, next) {
-    let puedePasar = false;
-    let statusError = 403;
-    let mensajeError = "No tiene permisos para realizar esta acción";
+export const esAdmin = (req, res, next) => {
+    let puedoPasar = false;
     if (req.autenticar && req.autenticar.roleId === 1) {
-        puedePasar = true;
+    puedoPasar = true;
     }
-    if (puedePasar) {
-        next();
+    if (puedoPasar) {
+    next();
     } else {
-        res.status(statusError).json({error: mensajeError});
+    res.status(403).json({ error: "Acceso denegado: Se requieren permisos de administrador" });
     }
-}
-
-export default esAdmin;
+};
