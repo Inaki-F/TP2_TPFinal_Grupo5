@@ -39,7 +39,9 @@ Promocion.init(
             allowNull: false,
             validate: {
                 isAfterNow(value) {
-                    if (value < new Date()) {
+                    const hoy = new Date();
+                    hoy.setHours(0, 0, 0, 0);
+                    if (value < hoy) {
                         throw new Error("La fecha de inicio debe ser una fecha futura.");
                     }
                 }

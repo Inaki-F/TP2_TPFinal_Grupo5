@@ -3,19 +3,18 @@ import sequelize from "../connection/sequelize.js";
 
 class Carrito extends Model {}
 
-Carrito.init(
-  {
-    id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    }
+Carrito.init({
+  usuarioId: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: false,
+    references: { model: "usuarios", key: "id" },
   },
-  {
-    sequelize: sequelize,
-    modelName: "Carrito",
-    timestamps: false,
-  }
-);
+}, {
+  sequelize,
+  modelName: "Carrito",
+  tableName: "carritos",
+  timestamps: false,
+});
 
 export default Carrito;
