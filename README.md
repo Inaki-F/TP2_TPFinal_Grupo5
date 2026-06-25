@@ -58,7 +58,7 @@ tp2-grupo5
 Para generar datos iniciales (roles, usuario administrador, categorías, productos y promociones):
 
 ```bash
-node preCarga.js
+node --env-file .env preCarga.js
 ```
 
 ### Usuario administrador generado

@@ -1,3 +1,4 @@
+// preCarga.js
 import sequelize from "./connection/sequelize.js";
 import {
   Usuario,
@@ -8,13 +9,17 @@ import {
   PromocionCategoria,
   PromoProducto,
 } from "./models/index.js";
-import bcrypt from "bcrypt";
 
 const precargarDatos = async () => {
   try {
     await sequelize.authenticate();
     console.log("✅ Conexión a la base de datos establecida.");
+  } catch (error) {
+    console.error("❌ Error de conexión:", error);
+    process.exit(1);
+  }
 
+  try {
     // ---------- 1. Roles ----------
     const roles = [
       { id: 1, nombre: "admin" },
@@ -22,27 +27,23 @@ const precargarDatos = async () => {
       { id: 3, nombre: "empleado" },
     ];
     for (const rol of roles) {
-      await Rol.findOrCreate({
-        where: { id: rol.id },
-        defaults: rol,
-      });
+      await Rol.findOrCreate({ where: { id: rol.id }, defaults: rol });
     }
     console.log("✅ Roles cargados");
 
-    // ---------- 2. Usuario admin ----------
-    const passHash = await bcrypt.hash("Admin123!", 10);
+    // ---------- 2. Usuario admin (contraseña en texto plano) ----------
     await Usuario.findOrCreate({
       where: { email: "admin@gmail.com" },
       defaults: {
         nombre: "admin",
         email: "admin@gmail.com",
-        password: passHash,
+        password: "Admin123!", // ✅ Se hashea automáticamente en beforeCreate
         roleId: 1,
       },
     });
     console.log("✅ Usuario admin cargado (admin@gmail.com / Admin123!)");
 
-    // ---------- 3. Categorías (kiosco) ----------
+    // ---------- 3. Categorías ----------
     const categorias = [
       { nombre: "Golosinas", descripcion: "Dulces, chocolates, caramelos" },
       { nombre: "Bebidas", descripcion: "Gaseosas, aguas, jugos" },
@@ -51,10 +52,7 @@ const precargarDatos = async () => {
     ];
     const categoriasCreadas = [];
     for (const cat of categorias) {
-      const [c] = await Categoria.findOrCreate({
-        where: { nombre: cat.nombre },
-        defaults: cat,
-      });
+      const [c] = await Categoria.findOrCreate({ where: { nombre: cat.nombre }, defaults: cat });
       categoriasCreadas.push(c);
     }
     console.log("✅ Categorías cargadas");
@@ -128,10 +126,7 @@ const precargarDatos = async () => {
     ];
     const productos = [];
     for (const p of productosData) {
-      const [prod] = await Producto.findOrCreate({
-        where: { nombre: p.nombre },
-        defaults: p,
-      });
+      const [prod] = await Producto.findOrCreate({ where: { nombre: p.nombre }, defaults: p });
       productos.push(prod);
     }
     console.log("✅ Productos cargados");
@@ -159,16 +154,12 @@ const precargarDatos = async () => {
     ];
     const promociones = [];
     for (const p of promocionesData) {
-      const [promo] = await Promocion.findOrCreate({
-        where: { nombre: p.nombre },
-        defaults: p,
-      });
+      const [promo] = await Promocion.findOrCreate({ where: { nombre: p.nombre }, defaults: p });
       promociones.push(promo);
     }
     console.log("✅ Promociones cargadas");
 
     // ---------- 6. Productos incluidos en promociones ----------
-    // Pack Fiesta: Papas (prod4) + Chocolate (prod0) + Gaseosa (prod2)
     await PromoProducto.bulkCreate(
       [
         { promocionId: promociones[0].id, productoId: productos[0].id, cantidad: 1 },
@@ -177,7 +168,6 @@ const precargarDatos = async () => {
       ],
       { ignoreDuplicates: true }
     );
-    // Oferta Bebidas: 2 Coca-Cola + 1 Agua
     await PromoProducto.bulkCreate(
       [
         { promocionId: promociones[1].id, productoId: productos[2].id, cantidad: 2 },
@@ -185,10 +175,9 @@ const precargarDatos = async () => {
       ],
       { ignoreDuplicates: true }
     );
-    console.log("✅ Productos incluidos en promociones cargados");
+    console.log("✅ Productos incluidos en promociones");
 
     // ---------- 7. Categorías de promociones ----------
-    // Pack Fiesta: Snacks + Golosinas + Bebidas
     await PromocionCategoria.bulkCreate(
       [
         { promocionId: promociones[0].id, categoriaId: categoriasCreadas[0].id },
@@ -197,14 +186,13 @@ const precargarDatos = async () => {
       ],
       { ignoreDuplicates: true }
     );
-    // Oferta Bebidas: solo Bebidas
     await PromocionCategoria.bulkCreate(
       [{ promocionId: promociones[1].id, categoriaId: categoriasCreadas[1].id }],
       { ignoreDuplicates: true }
     );
-    console.log("✅ Categorías de promociones cargadas");
+    console.log("✅ Categorías de promociones");
 
-    console.log("🎉 Precarga completada exitosamente.");
+    console.log("🎉 ¡Precarga completada exitosamente!");
     process.exit(0);
   } catch (error) {
     console.error("❌ Error durante la precarga:", error);
