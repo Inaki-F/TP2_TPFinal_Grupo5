@@ -13,7 +13,7 @@ router.get("/", autenticar, esEmpleado, productoController.getAll);
 router.get("/:id", validateIdParam, productoController.getById);
 router.post("/", autenticar,  esAdmin, productoController.create);
 router.put("/:id", autenticar, esEmpleado, validateIdParam, productoController.update);
-router.patch("/:id/desactivar",esEmpleado, validateIdParam, productoController.desactivate);
+router.patch("/:id/desactivar",  autenticar, esEmpleado, validateIdParam, productoController.desactivate);
 router.patch("/:id/reactivar", autenticar, esEmpleado, validateIdParam, productoController.reactivate);
 
 export default router;
