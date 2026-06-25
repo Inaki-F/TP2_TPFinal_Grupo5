@@ -3,6 +3,7 @@ import usuarioController from "../containers/usuarioContainer.js";
 import autenticar from "../middlewares/autenticar.js";
 import { esAdmin } from "../middlewares/esAdmin.js";
 import { esEmpleado } from "../middlewares/esEmpleado.js";
+import { validateIdParam } from "../middlewares/validateId.js";
 
 const usuarioRoutes = Router();
 
@@ -18,8 +19,8 @@ usuarioRoutes.get("/clientes", autenticar, esEmpleado, usuarioController.obtener
 
 // Rutas exclusivas de admin
 usuarioRoutes.get("/", autenticar, esAdmin, usuarioController.obtenerTodosUsuarios);
-usuarioRoutes.get("/:id", autenticar, esAdmin, usuarioController.obtenerUsuarioPorId);
-usuarioRoutes.put("/:id", autenticar, esAdmin, usuarioController.actualizarUsuario);
-usuarioRoutes.delete("/:id", autenticar, esAdmin, usuarioController.eliminarUsuario);
+usuarioRoutes.get("/:id", autenticar, esAdmin, validateIdParam, usuarioController.obtenerUsuarioPorId);
+usuarioRoutes.put("/:id", autenticar, esAdmin, validateIdParam, usuarioController.actualizarUsuario);
+usuarioRoutes.delete("/:id", autenticar, esAdmin, validateIdParam, usuarioController.eliminarUsuario);
 
 export default usuarioRoutes;

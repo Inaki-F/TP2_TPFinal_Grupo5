@@ -116,7 +116,7 @@ _agruparProductosRepetidos = (productos) => {
 };
 
 
-   getPromocionesActivas = async() => {
+  getPromocionesActivas = async() => {
       const ahora = new Date();
     const promociones = await this.promocion.findAll({
       attributes: ["id", "nombre", "precio"],
