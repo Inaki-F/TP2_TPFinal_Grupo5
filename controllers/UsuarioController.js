@@ -68,7 +68,7 @@ class UsuarioController {
 
   me = async (req, res) => {
     try {
-      const usuarioLogueado = req.autenticar;
+      const usuarioLogueado = req.user;
       res.status(200).send({ success: true, message: usuarioLogueado });
     } catch (error) {
       res.status(400).send({ success: false, message: error.message });
