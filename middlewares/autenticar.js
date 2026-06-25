@@ -8,7 +8,7 @@ function autenticar(req, res, next) {
         const {payload} = req.cookies;
         if (payload) {
             const decoded = verifyToken(payload);
-            req.autenticar = decoded;
+            req.user = decoded;
             puedoPasar = true;
         }
     } catch (error) {
