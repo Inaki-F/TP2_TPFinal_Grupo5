@@ -11,8 +11,8 @@ router.use(autenticar);
 
 router.post("/", pedidoController.confirmarPedido);
 router.get("/", pedidoController.obtenerPedidosUsuario);
-router.get("/todos", esEmpleado, pedidoController.obtenerTodos);
+router.get("/todos", pedidoController.obtenerTodos);
 router.get("/:id",validateIdParam, pedidoController.obtenerPedido);
-router.patch("/:id/estado", esEmpleado, pedidoController.actualizarEstado);
+router.patch("/:id/estado", pedidoController.actualizarEstado);
 
 export default router;

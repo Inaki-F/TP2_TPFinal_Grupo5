@@ -65,7 +65,7 @@ node --env-file .env preCarga.js
 
 | Email                                     | Contraseña |
 | ----------------------------------------- | ---------- |
-| [admin@gmail.com](mailto:admin@gmail.com) | Admin123!  |
+| [admin@gmail.com](mail:admin@gmail.com) | Admin123!  |
 
 ---
 

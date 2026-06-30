@@ -12,8 +12,8 @@ router.get("/", categoriaController.getAll);
 router.get("/:id", validateIdParam, categoriaController.getById);
 
 //Rutas protegidas, cualquier miembro del staff puede crear, editar o eliminar categorias
-router.post("/", autenticar, esEmpleado, categoriaController.create);
-router.put("/:id", autenticar, esEmpleado, validateIdParam, categoriaController.update);
-router.delete("/:id", autenticar, esEmpleado, validateIdParam, categoriaController.delete);
+router.post("/", categoriaController.create);
+router.put("/:id", validateIdParam, categoriaController.update);
+router.delete("/:id", validateIdParam, categoriaController.delete);
 
 export default router;

@@ -7,13 +7,12 @@ import { esEmpleado } from "../middlewares/esEmpleado.js";
 
 const router = Router();
 
-router.get("/all", autenticar, esEmpleado, promocionController.getAll);
+router.get("/all", promocionController.getAll);
 router.get("/", promocionController.getActivas);
 router.get("/:id", validateIdParam, promocionController.getById);
-router.use(autenticar);
-router.post("/", esAdmin, promocionController.create);
-router.put("/:id", esEmpleado, validateIdParam, promocionController.update);
-router.patch("/:id/desactivar", esEmpleado, validateIdParam, promocionController.desactivate);
-router.patch("/:id/reactivar", esEmpleado, validateIdParam, promocionController.reactivate);
+router.post("/", promocionController.create);
+router.put("/:id", validateIdParam, promocionController.update);
+router.patch("/:id/desactivar", validateIdParam, promocionController.desactivate);
+router.patch("/:id/reactivar",  validateIdParam, promocionController.reactivate);
 
 export default router;

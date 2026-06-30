@@ -119,7 +119,7 @@ _agruparProductosRepetidos = (productos) => {
   getPromocionesActivas = async() => {
       const ahora = new Date();
     const promociones = await this.promocion.findAll({
-      attributes: ["id", "nombre", "precio"],
+      attributes: ["id", "nombre", "precio", "descuento"],
       where: {
         fechaSalida: { [Op.lte]: ahora },
         fechaFin: { [Op.gte]: ahora },
